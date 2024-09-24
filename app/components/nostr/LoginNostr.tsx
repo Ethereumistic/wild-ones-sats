@@ -4,6 +4,7 @@ import * as nostr from 'nostr-tools';
 import NDK from "@nostr-dev-kit/ndk";
 import { IconCopy } from "@tabler/icons-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Define the type for the Nostr window object
 type NostrWindow = Window & {
@@ -44,6 +45,7 @@ async function initializeNDK() {
 
 const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     initializeNDK();
@@ -74,8 +76,25 @@ const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
         profilePic: ndkUser.profile?.image || `https://robohash.org/${publicKey}`,
       };
 
+      // Save user to database
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: loggedInUser.name,
+          npub: loggedInUser.npub,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save user to database');
+      }
+
       setUser(loggedInUser);
       onLogin(loggedInUser);
+      router.refresh(); // Refresh the page to update server-side components
     } catch (error) {
       console.error("Error during Nostr login:", error);
       alert("Failed to login with Nostr. Please try again.");
