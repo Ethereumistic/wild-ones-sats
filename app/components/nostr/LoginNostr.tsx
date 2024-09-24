@@ -44,7 +44,7 @@ async function initializeNDK() {
 }
 
 const LoginNostr = () => {
-    const { user, setUser } = useStore();
+  const { user, setUser } = useStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -76,20 +76,31 @@ const LoginNostr = () => {
         profilePic: ndkUser.profile?.image || `https://robohash.org/${publicKey}`,
       };
 
-      // Save user to database
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: loggedInUser.name,
-          npub: loggedInUser.npub,
-        }),
-      });
+      // Check if user already exists in the database
+      const userResponse = await fetch(`/api/get-user?npub=${npub}`);
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch user from database');
+      }
 
-      if (!response.ok) {
-        throw new Error('Failed to save user to database');
+      const userData = await userResponse.json();
+      if (!userData.user) {
+        // Save new user to database
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: loggedInUser.name,
+            npub: loggedInUser.npub,
+            characters: ['Dog'], // Add default character
+            weapons: ['anti-grav-missile'], // Add default weapon
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save user to database');
+        }
       }
 
       setUser(loggedInUser);

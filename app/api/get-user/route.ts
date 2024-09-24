@@ -7,11 +7,12 @@ if (!uri) {
   throw new Error('Please add your MongoDB URI to .env.local');
 }
 
-export async function POST(request: Request) {
-  const { name, npub, characters, weapons } = await request.json();
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const npub = searchParams.get('npub');
 
-  if (!name || !npub) {
-    return NextResponse.json({ error: 'Name and npub are required' }, { status: 400 });
+  if (!npub) {
+    return NextResponse.json({ error: 'Npub is required' }, { status: 400 });
   }
 
   const client = new MongoClient(uri as string, {
@@ -27,18 +28,19 @@ export async function POST(request: Request) {
     const database = client.db('wild-sats');
     const users = database.collection('users');
 
-    console.log('Updating user in database...');
-    const result = await users.updateOne(
-      { npub: npub },
-      { $set: { name: name, npub: npub, characters: characters, weapons: weapons } },
-      { upsert: true }
-    );
+    console.log('Fetching user from database...');
+    const user = await users.findOne({ npub: npub });
 
-    console.log('User updated in database');
-    return NextResponse.json({ success: true, result });
+    if (!user) {
+      console.log('No user found');
+      return NextResponse.json({ user: null });
+    }
+
+    console.log('User fetched from database:', user);
+    return NextResponse.json({ user });
   } catch (error) {
-    console.error('Error saving user to database:', error);
-    return NextResponse.json({ error: 'Failed to save user' }, { status: 500 });
+    console.error('Error fetching user from database:', error);
+    return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 });
   } finally {
     console.log('Closing MongoDB connection');
     await client.close();

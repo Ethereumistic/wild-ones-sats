@@ -8,10 +8,10 @@ if (!uri) {
 }
 
 export async function POST(request: Request) {
-  const { name, npub, characters, weapons } = await request.json();
+  const { npub, animal } = await request.json();
 
-  if (!name || !npub) {
-    return NextResponse.json({ error: 'Name and npub are required' }, { status: 400 });
+  if (!npub || !animal) {
+    return NextResponse.json({ error: 'Npub and animal are required' }, { status: 400 });
   }
 
   const client = new MongoClient(uri as string, {
@@ -27,18 +27,17 @@ export async function POST(request: Request) {
     const database = client.db('wild-sats');
     const users = database.collection('users');
 
-    console.log('Updating user in database...');
+    console.log('Updating user characters in database...');
     const result = await users.updateOne(
       { npub: npub },
-      { $set: { name: name, npub: npub, characters: characters, weapons: weapons } },
-      { upsert: true }
+      { $addToSet: { characters: animal } } // Add the animal to the characters array
     );
 
-    console.log('User updated in database');
+    console.log('User characters updated in database');
     return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error('Error saving user to database:', error);
-    return NextResponse.json({ error: 'Failed to save user' }, { status: 500 });
+    console.error('Error updating user characters in database:', error);
+    return NextResponse.json({ error: 'Failed to update user characters' }, { status: 500 });
   } finally {
     console.log('Closing MongoDB connection');
     await client.close();

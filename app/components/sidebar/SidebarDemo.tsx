@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import LoginNostr from "../nostr/LoginNostr";
 import { useStore } from "@/app/store/useStore";
-
+import Shop from "../shop/ShopDashboard";
 
 export function SidebarDemo() {
     const { user } = useStore();
@@ -82,7 +82,7 @@ export function SidebarDemo() {
           </div>
         </SidebarBody>
       </Sidebar>
-      {activeTab === "Shop" ? <ShopDashboard /> : <Dashboard />}
+      {activeTab === "Shop" ? <Shop /> : <Dashboard />}
     </div>
   );
 }
