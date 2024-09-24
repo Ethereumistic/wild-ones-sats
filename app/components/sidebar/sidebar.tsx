@@ -1,14 +1,15 @@
 "use client";
 import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
 interface Links {
   label: string;
-  href: string;
+  href?: string; // Make href optional
   icon: React.JSX.Element | React.ReactNode;
+  show?: boolean; // Make show property optional
+  tab: string;
 }
 
 interface SidebarContextProps {
@@ -155,24 +156,25 @@ export const MobileSidebar = ({
   );
 };
 
-export const SidebarLink = ({
-  link,
-  className,
-  ...props
-}: {
+type SidebarLinkProps = {
   link: Links;
+  onClick?: () => void;
   className?: string;
-  props?: LinkProps;
-}) => {
+};
+
+export const SidebarLink: React.FC<SidebarLinkProps> = ({ link, onClick, className }) => {
   const { open, animate } = useSidebar();
   return (
-    <Link
-      href={link.href}
+    <a
+      href={link.href || "#"} // Provide a default value for href
+      onClick={(e) => {
+        e.preventDefault();
+        if (onClick) onClick();
+      }}
       className={cn(
         "flex items-center justify-start gap-2  group/sidebar py-2",
         className
       )}
-      {...props}
     >
       {link.icon}
 
@@ -185,6 +187,6 @@ export const SidebarLink = ({
       >
         {link.label}
       </motion.span>
-    </Link>
+    </a>
   );
 };

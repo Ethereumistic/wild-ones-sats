@@ -2,26 +2,30 @@
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
 import {
-  IconArrowLeft,
   IconBrandTabler,
   IconSettings,
+  IconShoppingCart,
   IconUserBolt,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import LoginNostr from "../nostr/LoginNostr";
+import { useStore } from "@/app/store/useStore";
+
 
 export function SidebarDemo() {
-  const [user, setUser] = useState<any>(null);
+    const { user } = useStore();
+    const [activeTab, setActiveTab] = useState<string>("Dashboard");
 
   const links = [
     {
-      label: "Dashboard",
+      label: "Multiplayer",
       href: "#",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
       ),
+      tab: "Dashboard",
     },
     {
       label: "Profile",
@@ -29,6 +33,7 @@ export function SidebarDemo() {
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
       ),
+      tab: "Profile",
     },
     {
       label: "Settings",
@@ -36,13 +41,15 @@ export function SidebarDemo() {
       icon: (
         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
       ),
+      tab: "Settings",
     },
     {
-      label: "Logout",
+      label: "Shop",
       href: "#",
       icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
+        <IconShoppingCart className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
       ),
+      tab: "Shop",
       show: !!user,
     },
   ];
@@ -61,18 +68,21 @@ export function SidebarDemo() {
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) =>
                 link.show !== false ? (
-                  <SidebarLink key={idx} link={link} />
+                  <SidebarLink
+                    key={idx}
+                    link={link}
+                    onClick={() => setActiveTab(link.tab)}
+                  />
                 ) : null
               )}
             </div>
           </div>
           <div className="flex flex-col items-center gap-2">
-
-            <LoginNostr onLogin={setUser} />
+            <LoginNostr />
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard />
+      {activeTab === "Shop" ? <ShopDashboard /> : <Dashboard />}
     </div>
   );
 }
@@ -122,8 +132,38 @@ const Dashboard = () => {
           {[...new Array(1)].map((i) => (
             <div
               key={"second-array" + i}
-              className="h-full w-full rounded-lg  bg-gray-100 dark:bg-neutral-800 animate-pulse"
+              className="h-full w-full rounded-lg flex items-center justify-center bg-gray-100 dark:bg-neutral-800 "
+            >
+                <div className="text-center text-2xl items-center  justify-center">test</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Dummy dashboard component with content
+const ShopDashboard = () => {
+  return (
+    <div className="flex flex-1">
+      <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
+        <div className="flex gap-2">
+          {[...new Array(4)].map((i) => (
+            <div
+              key={"first-array" + i}
+              className="h-20 w-full rounded-lg  bg-gray-100 dark:bg-neutral-800 animate-pulse"
             ></div>
+          ))}
+        </div>
+        <div className="flex gap-2 flex-1">
+          {[...new Array(1)].map((i) => (
+            <div
+              key={"second-array" + i}
+              className="h-full w-full rounded-lg flex items-center justify-center bg-gray-100 dark:bg-neutral-800 "
+            >
+                <div className="text-center text-2xl items-center  justify-center">Shop</div>
+            </div>
           ))}
         </div>
       </div>

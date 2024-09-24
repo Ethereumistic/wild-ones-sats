@@ -5,7 +5,7 @@ import NDK from "@nostr-dev-kit/ndk";
 import { IconCopy } from "@tabler/icons-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import { useStore } from "@/app/store/useStore";
 // Define the type for the Nostr window object
 type NostrWindow = Window & {
   nostr?: {
@@ -43,8 +43,8 @@ async function initializeNDK() {
   }
 }
 
-const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
-  const [user, setUser] = useState<any>(null);
+const LoginNostr = () => {
+    const { user, setUser } = useStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -93,7 +93,6 @@ const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
       }
 
       setUser(loggedInUser);
-      onLogin(loggedInUser);
       router.refresh(); // Refresh the page to update server-side components
     } catch (error) {
       console.error("Error during Nostr login:", error);
@@ -103,7 +102,6 @@ const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
 
   const handleLogout = () => {
     setUser(null);
-    onLogin(null);
   };
 
   const copyNpub = () => {
