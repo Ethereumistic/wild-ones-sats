@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IconArrowLeft, IconArrowRight, IconLock } from '@tabler/icons-react';
 import { useStore } from '@/app/store/useStore';
 
-const animals = [
+export const animals = [
     {
       name: 'Dog',
       cost: 30000,
@@ -82,6 +82,20 @@ const animals = [
         strength: 60,
       },
     },
+    {
+      name: 'Panda',
+      cost: 30000,
+      specialAbility: 'Panda Punch',
+      specialAbilityImage: '/abilities/Panda_Punch.png',
+      image: '/animals/panda.png',
+      stats: {
+        speed: 50,
+        health: 70,
+        jump: 40,
+        strength: 60,
+      },
+    },
+
     // Add more animals here
   ];
   

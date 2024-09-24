@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import LoginNostr from "../nostr/LoginNostr";
 import { useStore } from "@/app/store/useStore";
 import Shop from "../shop/ShopDashboard";
+import MainDashboard from "../main/MainDashboard";
 
 export function SidebarDemo() {
     const { user } = useStore();
@@ -82,7 +83,7 @@ export function SidebarDemo() {
           </div>
         </SidebarBody>
       </Sidebar>
-      {activeTab === "Shop" ? <Shop /> : <Dashboard />}
+      {activeTab === "Shop" ? <Shop /> : <MainDashboard />}
     </div>
   );
 }

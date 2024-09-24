@@ -93,7 +93,7 @@ const LoginNostr = () => {
           body: JSON.stringify({
             name: loggedInUser.name,
             npub: loggedInUser.npub,
-            characters: ['Dog'], // Add default character
+            characters: ['Dog', 'Cat', 'Panda'], // Add default character
             weapons: ['anti-grav-missile'], // Add default weapon
           }),
         });
