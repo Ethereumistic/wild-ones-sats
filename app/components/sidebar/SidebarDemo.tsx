@@ -4,13 +4,11 @@ import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
 import {
   IconArrowLeft,
   IconBrandTabler,
-  IconCopy,
   IconSettings,
   IconUserBolt,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import LoginNostr from "../nostr/LoginNostr";
 

@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import * as nostr from 'nostr-tools';
-import NDK, { NDKEvent, NDKUser } from "@nostr-dev-kit/ndk";
+import NDK from "@nostr-dev-kit/ndk";
 import { IconCopy } from "@tabler/icons-react";
+import Image from "next/image";
 
 // Define the type for the Nostr window object
 type NostrWindow = Window & {
@@ -104,9 +105,11 @@ const LoginNostr = ({ onLogin }: { onLogin: (user: any) => void }) => {
         </button>
       ) : (
         <div className="flex flex-col items-center">
-          <img 
+          <Image 
             src={user.profilePic} 
             alt="Profile" 
+            width={16}
+            height={16}
             className="w-16 h-16 rounded-full mb-2"
           />
           <div className="font-bold text-lg">{user.name}</div>
