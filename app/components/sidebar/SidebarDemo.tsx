@@ -14,6 +14,7 @@ import LoginNostr from "../nostr/LoginNostr";
 import { useStore } from "@/app/store/useStore";
 import Shop from "../shop/ShopDashboard";
 import MainDashboard from "../main/MainDashboard";
+import SingleDash from "../single/SingleDash";
 
 export function SidebarDemo() {
     const { user } = useStore();
@@ -29,12 +30,12 @@ export function SidebarDemo() {
       tab: "Dashboard",
     },
     {
-      label: "Profile",
+      label: "Singleplayer",
       href: "#",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-24 w-24 flex-shrink-0" />
       ),
-      tab: "Profile",
+      tab: "Singleplayer",
     },
     {
       label: "Settings",
@@ -83,7 +84,7 @@ export function SidebarDemo() {
           </div>
         </SidebarBody>
       </Sidebar>
-      {activeTab === "Shop" ? <Shop /> : <MainDashboard />}
+      {activeTab === "Shop" ? <Shop /> : activeTab === "Singleplayer" ? <SingleDash /> : <MainDashboard />}
     </div>
   );
 }
